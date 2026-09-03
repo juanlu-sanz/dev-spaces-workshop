@@ -1,3 +1,5 @@
+# workspace-resource-limits.yaml
+# Purpose: Resource quota for workspace fairness across participants
 apiVersion: v1
 kind: ResourceQuota
 metadata:

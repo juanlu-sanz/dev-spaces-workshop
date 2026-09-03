@@ -1,0 +1,548 @@
+= Step 2 - Team Collaboration: Shared Java Project
+include::_attributes.adoc[]
+
+Work in groups of 2-4 people to simulate a real-world collaboration scenario. Your team will create a shared Git repository, open it in Dev Spaces using the template from Step 1, and collaborate on a simple Java project - just like you would in your daily work.
+
+This step builds on xref:01-workspace-template.adoc[Step 1] by having each participant use the Dev Spaces workspace to contribute code to a shared repository, demonstrating how Dev Spaces isolates each developer's environment while sharing code through Git.
+
+== Prerequisites
+
+* xref:01-workspace-template.adoc[Step 1: Create Workspace Template] completed
+* Each participant has developer-level access to the cluster
+* Each participant has access to a Git hosting service (GitHub, GitLab, Gitea)
+* Groups of 2-4 people formed
+
+== How It Works
+
+Each team member opens the same Git repository in their own Dev Spaces workspace. The `devfile.yaml` in the repository ensures everyone gets the same JDK, Maven, and editor configuration. Team members work on separate branches, then merge their contributions back to `main`.
+
+== Steps to Apply
+
+[#create-repo]
+=== 1. Create a shared repository
+
+*What:* One person per team creates a Git repository with a Maven project and devfile.
+
+*Why:* The shared repository is where the team collaborates. The devfile ensures consistent environments across all workspaces.
+
+One team member creates a new repository on your Git hosting service with the name `java-team-<team-name>` (e.g., `java-team-alpha`). Initialize it with a README and add all team members as collaborators with write access.
+
+Clone the repository and create the project structure:
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+git clone https://<your-git-host>/<org>/java-team-<team-name>.git
+cd java-team-<team-name>
+mkdir -p src/main/java/com/workshop/team
+mkdir -p src/main/resources
+mkdir -p src/test/java/com/workshop/team
+----
+
+Create `pom.xml`:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.workshop</groupId>
+    <artifactId>java-team-project</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>Java Team Project</name>
+
+    <properties>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>5.10.2</junit.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.workshop.team.App</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+----
+
+Create the main application class `src/main/java/com/workshop/team/App.java`:
+
+[source,java]
+----
+package com.workshop.team;
+
+public class App {
+    public static void main(String[] args) {
+        System.out.println("Hello from Java Team Project!");
+        System.out.println("Java version: " + System.getProperty("java.version"));
+    }
+
+    public static String greet(String name) {
+        return "Hello, " + name + "!";
+    }
+}
+----
+
+Create a test `src/test/java/com/workshop/team/AppTest.java`:
+
+[source,java]
+----
+package com.workshop.team;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class AppTest {
+    @Test
+    void greetReturnsExpectedMessage() {
+        assertEquals("Hello, World!", App.greet("World"));
+    }
+
+    @Test
+    void greetHandlesEmptyName() {
+        assertEquals("Hello, !", App.greet(""));
+    }
+}
+----
+
+Create `devfile.yaml` at the root of the repository:
+
+[source,yaml]
+----
+schemaVersion: 2.2.0
+metadata:
+  name: java-team-<team-name>
+  displayName: "Java Team <team-name> Workspace"
+  language: java
+  projectType: Maven
+attributes:
+  controller.devfile.io/storage-type: per-user
+
+components:
+  - name: java-tools
+    container:
+      image: registry.redhat.io/devspaces/udi-rhel9:3.27
+      memoryLimit: 4Gi
+      cpuLimit: 1000m
+      cpuRequest: 500m
+      mountSources: true
+      env:
+        - name: JAVA_HOME
+          value: /usr/lib/jvm/java-17-openjdk
+        - name: MAVEN_OPTS
+          value: "-Xmx1024m"
+      endpoints:
+        - name: app
+          targetPort: 8080
+          exposure: public
+        - name: debug
+          targetPort: 5005
+          exposure: internal
+      volumeMounts:
+        - name: m2-cache
+          path: /home/user/.m2
+  - name: m2-cache
+    volume:
+      size: 3Gi
+
+commands:
+  - id: build
+    exec:
+      component: java-tools
+      commandLine: mvn clean package -DskipTests
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: build
+        isDefault: true
+  - id: test
+    exec:
+      component: java-tools
+      commandLine: mvn test
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: test
+        isDefault: true
+
+events:
+  postStart:
+    - build
+----
+
+Commit and push:
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+git add -A
+git commit -m "Initial Java project structure with devfile"
+git push origin main
+----
+
+NOTE: When you open this repo from the Dev Spaces dashboard, the dashboard will prompt you to authenticate with your Git provider if the repository is private. This is normal and enables pushing/pulling code from your workspace.
+
+.Verify: Repository is ready
+[%collapsible]
+====
+All team members should be able to see the repository containing:
+
+[.console-output]
+[source,bash]
+----
+java-team-<team-name>/
+  devfile.yaml
+  pom.xml
+  src/main/java/com/workshop/team/App.java
+  src/test/java/com/workshop/team/AppTest.java
+----
+====
+
+'''
+
+[#open-in-devspaces]
+=== 2. Open the repository in Dev Spaces
+
+*What:* Each team member opens the shared repository in their own Dev Spaces workspace.
+
+*Why:* This demonstrates how Dev Spaces provides isolated workspaces while sharing code - each person gets their own JDK, Maven cache, and editor without interfering with others.
+
+Each team member:
+
+. Go to the Dev Spaces dashboard
+. In the *"Import from Git"* field, paste the repository URL:
++
+----
+https://<your-git-host>/<org>/java-team-<team-name>.git
+----
+. Click *"Create & Open"*
+
+Dev Spaces detects the `devfile.yaml` and configures the workspace automatically. The first start takes ~2-3 minutes as the `postStart` event compiles the project and downloads Maven dependencies.
+
+.Verify: Everyone is in
+[%collapsible]
+====
+Each team member opens a terminal in their workspace and runs:
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+java -version
+mvn -version
+pwd
+----
+
+[.console-output]
+[source,bash]
+----
+openjdk version "17.0.x" ...
+Apache Maven 3.9.x ...
+/projects/java-team-<team-name>
+----
+
+Everyone should see JDK 17+, Maven 3.9+, and the project directory as the working directory.
+====
+
+'''
+
+[#collaborate]
+=== 3. Collaborate - each member adds a utility class
+
+*What:* Each team member creates a different utility class on their own feature branch.
+
+*Why:* This simulates a real team workflow - isolated development on feature branches, followed by integration.
+
+Each member creates a feature branch:
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+git checkout -b feature/<your-name>-util
+----
+
+Each person creates a utility class in `src/main/java/com/workshop/team/` and a matching test in `src/test/java/com/workshop/team/`. For example:
+
+*Person 1* - `StringUtils.java`:
+
+[source,java]
+----
+package com.workshop.team;
+
+public class StringUtils {
+    public static String reverse(String input) {
+        if (input == null) return null;
+        return new StringBuilder(input).reverse().toString();
+    }
+
+    public static boolean isPalindrome(String input) {
+        if (input == null) return false;
+        String cleaned = input.replaceAll("\\s+", "").toLowerCase();
+        return cleaned.equals(reverse(cleaned));
+    }
+}
+----
+
+*Person 2* - `MathUtils.java`:
+
+[source,java]
+----
+package com.workshop.team;
+
+public class MathUtils {
+    public static int factorial(int n) {
+        if (n < 0) throw new IllegalArgumentException("Negative input: " + n);
+        if (n <= 1) return 1;
+        return n * factorial(n - 1);
+    }
+
+    public static boolean isPrime(int n) {
+        if (n <= 1) return false;
+        for (int i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i == 0) return false;
+        }
+        return true;
+    }
+}
+----
+
+*Person 3* - `CollectionUtils.java`:
+
+[source,java]
+----
+package com.workshop.team;
+
+import java.util.List;
+import java.util.Collections;
+import java.util.stream.Collectors;
+
+public class CollectionUtils {
+    public static <T extends Comparable<T>> List<T> sorted(List<T> input) {
+        if (input == null) return Collections.emptyList();
+        return input.stream().sorted().collect(Collectors.toList());
+    }
+
+    public static <T> List<T> unique(List<T> input) {
+        if (input == null) return Collections.emptyList();
+        return input.stream().distinct().collect(Collectors.toList());
+    }
+}
+----
+
+Each person should also create a corresponding test class with JUnit 5 assertions.
+
+Build and test your code:
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+mvn test
+----
+
+Then commit and push the branch:
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+git add src/
+git commit -m "Add <ClassName> utility with tests"
+git push origin feature/<your-name>-util
+----
+
+.Verify: Branches pushed
+[%collapsible]
+====
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+git branch -r
+----
+
+[.console-output]
+[source,bash]
+----
+  origin/main
+  origin/feature/alice-util
+  origin/feature/bob-util
+  origin/feature/carol-util
+----
+
+You should see one branch per team member plus `origin/main`.
+====
+
+'''
+
+[#merge-integrate]
+=== 4. Merge and integrate
+
+*What:* Merge all feature branches to `main` and verify the combined project builds and passes all tests.
+
+*Why:* This is the integration step - proving that isolated workspaces produce code that works together.
+
+Each member merges their branch:
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+git checkout main
+git pull origin main
+git merge feature/<your-name>-util
+git push origin main
+----
+
+If there are merge conflicts, resolve them together - this is part of the learning.
+
+Once all branches are merged, everyone pulls the final state:
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+git checkout main
+git pull origin main
+----
+
+Build and test the combined project:
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+mvn clean test
+----
+
+.Verify: Team project is complete
+[%collapsible]
+====
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+find src -name "*.java" | sort
+mvn test
+----
+
+[.console-output]
+[source,bash]
+----
+src/main/java/com/workshop/team/App.java
+src/main/java/com/workshop/team/CollectionUtils.java
+src/main/java/com/workshop/team/MathUtils.java
+src/main/java/com/workshop/team/StringUtils.java
+src/test/java/com/workshop/team/AppTest.java
+src/test/java/com/workshop/team/CollectionUtilsTest.java
+src/test/java/com/workshop/team/MathUtilsTest.java
+src/test/java/com/workshop/team/StringUtilsTest.java
+...
+BUILD SUCCESS
+----
+
+Multiple Java source files and tests (one per team member), and `mvn test` passes with `BUILD SUCCESS`.
+====
+
+'''
+
+== Discussion
+
+Take 5 minutes as a team to discuss:
+
+. *Isolation* - Each person had their own workspace, but shared the code via Git. How is this different from sharing a single VM or bastion host?
+. *Reproducibility* - Everyone got the same tools because the `devfile.yaml` defined the environment. What happens if someone on the team needs JDK 21 instead of 17?
+. *Speed* - After the first start, subsequent workspace starts are faster due to Maven caching. What would you customize for your real-world team?
+
+== What This Solves (Compared to Step 1)
+
+[cols="2,3",options="header"]
+|===
+| Problem from Step 1 | How This Step Solves It
+
+| Individual workspace with no shared project
+| Team repository with devfile providing consistent environments
+
+| No collaboration workflow demonstrated
+| Feature branches, merge, and integration testing
+
+| Single-user experience only
+| Multiple team members working in parallel on the same codebase
+|===
+
+== What This Does NOT Solve (Yet)
+
+[cols="2,3",options="header"]
+|===
+| Remaining Problem | Possible Next Step
+
+| No CI/CD pipeline
+| Add a GitHub Actions or Tekton pipeline for automated testing
+
+| No container build/deploy
+| Add a Containerfile and deploy to OpenShift with `oc new-app`
+
+| No database or external services
+| Add a database component to the devfile (e.g., PostgreSQL)
+|===
+
+== Official Documentation
+
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.19[OpenShift Dev Spaces Documentation]
+* link:https://devfile.io/docs/2.2.0/devfile-schema[Devfile Schema Documentation]
+* link:https://catalog.redhat.com/software/containers/devspaces/udi-rhel9/[Red Hat UDI Image]
+
+== Alternatives Considered
+
+[cols="2,4",options="header"]
+|===
+| Approach | Notes
+
+| Dev Spaces workspaces from shared Git repo (this solution)
+| Consistent environments, isolated workspaces, Git-based collaboration. Scales to any team size.
+
+| Shared development VM or bastion host
+| Single environment, conflicts between users, no isolation. Simpler infrastructure but worse developer experience.
+
+| Local development with IDE sync
+| Full local control, but inconsistent tooling and complex onboarding.
+|===
+
+'''
+
+== Reset
+
+There are no cluster resources to clean up from this step. To fully reset:
+
+[.console-input]
+[source,bash]
+----
+# Delete the team repository from your Git hosting service (manual step)
+# Stop any running Dev Spaces workspaces from the dashboard
+----

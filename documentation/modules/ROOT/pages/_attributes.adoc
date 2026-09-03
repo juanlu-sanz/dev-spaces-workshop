@@ -1,0 +1,9 @@
+:experimental:
+:source-highlighter: highlightjs
+:title: Java Development on OpenShift Dev Spaces
+:ocp-version: 4.17+
+:devspaces-version: 3.19+
+:jdk-version: 17+
+:maven-version: 3.9+
+:udi-image: registry.redhat.io/devspaces/udi-rhel9:3.27
+:sample-repo-url: https://github.com/juanlu-sanz/my-sample-java-app

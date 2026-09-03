@@ -1,0 +1,22 @@
+# my-java-workspace-sample.yaml
+# Purpose: ConfigMap that registers a "My Java Workspace" sample tile in the Dev Spaces dashboard
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-java-workspace-sample
+  namespace: openshift-devspaces
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+    app.kubernetes.io/component: getting-started-samples
+data:
+  .sample0: |
+    {
+      "displayName": "My Java Workspace",
+      "description": "Pre-configured Java environment with JDK 17, Maven, and debugging support. Click to start developing!",
+      "tags": ["Java", "Maven", "Spring Boot"],
+      "url": "https://github.com/juanlu-sanz/my-sample-java-app.git",
+      "icon": {
+        "base64data": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI0VFMDAwMCIgZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThjLTQuNDEgMC04LTMuNTktOC04czMuNTktOCA4LTggOCAzLjU5IDggOC0zLjU5IDgtOCA4em0tMi0zLjVsNi0zLjUtNi0zLjV2N3oiLz48L3N2Zz4=",
+        "mediatype": "image/svg+xml"
+      }
+    }

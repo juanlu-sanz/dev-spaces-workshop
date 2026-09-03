@@ -1,0 +1,6 @@
+name: dev-spaces-workshop
+title: Java Development on OpenShift Dev Spaces
+version: master
+nav:
+  - modules/ROOT/nav.adoc
+start_page: ROOT:index.adoc

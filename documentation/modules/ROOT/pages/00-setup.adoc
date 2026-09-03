@@ -1,0 +1,236 @@
+= Cluster Setup
+include::_attributes.adoc[]
+
+This section is performed by the *cluster administrator* before the workshop begins. It installs OpenShift Dev Spaces and applies the base configuration needed for the exercises.
+
+== Prerequisites
+
+* OpenShift {ocp-version} cluster with cluster-admin access
+* `oc` CLI installed and authenticated to the cluster
+* A Git hosting service accessible from the cluster (GitHub, GitLab, Gitea)
+
+NOTE: All commands in this page target a single OpenShift cluster. Ensure your `oc` session is authenticated as cluster-admin before proceeding.
+
+== Steps to Apply
+
+[#install-devspaces]
+=== 1. Install the Dev Spaces operator
+
+*What:* Install the OpenShift Dev Spaces operator and create the CheCluster instance.
+
+*Why:* The operator manages the full Dev Spaces lifecycle - dashboard, workspace controller, and plugin registry.
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+oc create namespace openshift-devspaces
+oc apply -f 00-setup/subscription.yaml
+----
+
+Wait for the operator to become ready (~2-3 minutes):
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+oc get csv -n openshift-operators -w | grep devspaces
+----
+
+Once you see `Succeeded`, apply the CheCluster:
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+oc apply -f 00-setup/checluster.yaml
+----
+
+.Verify: Dev Spaces is running
+[%collapsible]
+====
+Wait for the cluster to become active (5-10 minutes):
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+echo "Waiting for CheCluster to become ready..."
+until [ "$(oc get checluster devspaces -n openshift-devspaces -o jsonpath='{.status.chePhase}' 2>/dev/null)" = "Active" ]; do
+  sleep 15
+  echo "  Still waiting... ($(oc get checluster devspaces -n openshift-devspaces -o jsonpath='{.status.chePhase}' 2>/dev/null || echo 'Initializing'))"
+done
+echo "CheCluster is Active!"
+----
+
+Confirm all pods are running:
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+oc get pods -n openshift-devspaces
+----
+
+[.console-output]
+[source,bash]
+----
+NAME                                      READY   STATUS    RESTARTS   AGE
+che-gateway-xxxxxxxxxx-xxxxx              4/4     Running   0          5m
+devspaces-xxxxxxxxxx-xxxxx                1/1     Running   0          5m
+devspaces-dashboard-xxxxxxxxxx-xxxxx      1/1     Running   0          5m
+plugin-registry-xxxxxxxxxx-xxxxx          1/1     Running   0          5m
+----
+
+All pods should show `Running` or `Completed`.
+====
+
+'''
+
+[#apply-security]
+=== 2. Apply security and resource configuration
+
+*What:* Create a SecurityContextConstraint for container builds and a ResourceQuota for workspace fairness.
+
+*Why:* The SCC allows workspaces to run container builds, and the quota prevents a single user from consuming all cluster resources.
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+oc apply -f 00-setup/container-build-scc.yaml
+oc apply -f 00-setup/workspace-resource-limits.yaml
+----
+
+.Verify: Configuration applied
+[%collapsible]
+====
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+oc get scc container-build
+oc get resourcequota devspaces-workspace-quota -n openshift-devspaces
+----
+
+[.console-output]
+[source,bash]
+----
+NAME              PRIV    CAPS                          SELINUX     RUNASUSER          FSGROUP     SUPGROUP   ...
+container-build   false   ["SETUID","SETGID",...] ...   MustRunAs   MustRunAsRange     MustRunAs   RunAsAny   ...
+----
+
+Both commands should return the resource without errors.
+====
+
+'''
+
+[#confirm-dashboard]
+=== 3. Confirm dashboard access
+
+*What:* Retrieve the Dev Spaces dashboard URL and verify it responds.
+
+*Why:* The dashboard is the entry point for all participants - they will use it to create workspaces.
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+oc get route devspaces -n openshift-devspaces -o jsonpath='https://{.spec.host}{"\n"}'
+----
+
+Open the URL in a browser and log in with your OpenShift credentials. You should see the Dev Spaces dashboard with the header banner *"Java Development Workshop Environment"*.
+
+.Verify: Dashboard responds
+[%collapsible]
+====
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+curl -skI "$(oc get route devspaces -n openshift-devspaces -o jsonpath='https://{.spec.host}')" | head -1
+----
+
+[.console-output]
+[source,bash]
+----
+HTTP/2 200
+----
+
+You may see `HTTP/2 302` (redirect to login) instead - both are expected.
+====
+
+'''
+
+[#configure-extensions]
+=== 4. (Optional) Configure the extension registry
+
+*What:* Point Dev Spaces at a public or private Open VSX registry for IDE extensions.
+
+*Why:* The embedded registry has a limited set of extensions. Java extensions (Red Hat Java, Maven, Debug) may require the full Open VSX registry.
+
+For *internet-connected* environments, point Dev Spaces at the public Open VSX registry:
+
+[source,yaml]
+----
+spec:
+  components:
+    pluginRegistry:
+      openVSXURL: "https://open-vsx.org"
+----
+
+For *air-gapped / disconnected* environments, deploy a standalone Open VSX mirror and configure Dev Spaces to use it:
+
+[source,yaml]
+----
+spec:
+  components:
+    pluginRegistry:
+      openVSXURL: "https://your-internal-openvsx.example.com"
+----
+
+.Verify: Extensions are available
+[%collapsible]
+====
+After updating the `CheCluster` resource, confirm the `plugin-registry` pod restarts. Then open a workspace and check the *Extensions* view to verify extensions resolve from the configured registry.
+====
+
+'''
+
+== Setup Complete
+
+The cluster is ready for participants. Share the dashboard URL with the group and proceed to xref:01-workspace-template.adoc[Step 1: Create Workspace Template].
+
+== Files Reference
+
+[cols="2,4",options="header"]
+|===
+| File | Purpose
+
+| `00-setup/subscription.yaml`
+| Operator subscription for Dev Spaces
+
+| `00-setup/checluster.yaml`
+| CheCluster instance with workshop configuration
+
+| `00-setup/container-build-scc.yaml`
+| SCC for container builds
+
+| `00-setup/workspace-resource-limits.yaml`
+| Resource quota for workspace fairness
+|===
+
+== Official Documentation
+
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.19[OpenShift Dev Spaces Documentation]
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.17[OpenShift Container Platform Documentation]
+* link:https://eclipse.dev/che/docs/stable/administration-guide/configuring-the-open-vsx-registry-url/[Configure the Open VSX Registry URL - Eclipse Che Administration Guide]
+
+'''
+
+== Reset
+
+Remove Dev Spaces and all configuration applied in this step. Resources are deleted in reverse order - the CheCluster must be removed before the operator subscription to allow proper cleanup of workspace resources.
+
+[.console-input]
+[source,bash]
+----
+oc delete resourcequota devspaces-workspace-quota -n openshift-devspaces --ignore-not-found
+oc delete scc container-build --ignore-not-found
+oc delete checluster devspaces -n openshift-devspaces --ignore-not-found
+oc wait --for=delete checluster/devspaces -n openshift-devspaces --timeout=120s 2>/dev/null || true
+oc delete subscription devspaces -n openshift-operators --ignore-not-found
+oc delete csv -n openshift-operators -l operators.coreos.com/devspaces.openshift-operators --ignore-not-found
+oc delete namespace openshift-devspaces --ignore-not-found
+----

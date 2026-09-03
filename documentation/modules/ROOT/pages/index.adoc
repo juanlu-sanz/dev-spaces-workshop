@@ -1,0 +1,45 @@
+= Java Development on OpenShift Dev Spaces
+:page-layout: home
+:!sectids:
+include::_attributes.adoc[]
+
+[.text-center.strong]
+== Cloud-native Java development - from zero to productive in minutes
+
+A hands-on workshop for teams interested in developing Java applications inside OpenShift Dev Spaces. Learn how to set up one-click developer workspaces, collaborate with your team through Git, and build Java projects entirely from the cloud - no local tooling required.
+
+Participants work in groups of 2-4 people throughout the exercises.
+
+[.tiles.browse]
+== Browse Modules
+
+[.tile]
+.xref:00-setup.adoc[Cluster Setup]
+* xref:00-setup.adoc#install-devspaces[Install Dev Spaces operator]
+* xref:00-setup.adoc#apply-security[Apply security and resource configuration]
+* xref:00-setup.adoc#confirm-dashboard[Confirm dashboard access]
+
+[.tile]
+.xref:01-workspace-template.adoc[Step 1: Create Workspace Template]
+* xref:01-workspace-template.adoc#understand-devfile[Understand the devfile]
+* xref:01-workspace-template.adoc#register-sample[Register a dashboard sample tile]
+* xref:01-workspace-template.adoc#launch-workspace[Launch a Java workspace]
+
+[.tile]
+.xref:02-team-collaboration.adoc[Step 2: Team Collaboration]
+* xref:02-team-collaboration.adoc#create-repo[Create a shared Java repository]
+* xref:02-team-collaboration.adoc#collaborate[Collaborate using branches]
+* xref:02-team-collaboration.adoc#merge-integrate[Merge and test the combined project]
+
+== Environment
+
+[cols="2,3",options="header"]
+|===
+| Item | Value
+| OpenShift Container Platform | {ocp-version}
+| OpenShift Dev Spaces | {devspaces-version}
+| JDK | {jdk-version}
+| Maven | {maven-version}
+| UDI Image | `{udi-image}`
+| Sample Repository | link:{sample-repo-url}[my-sample-java-app]
+|===

@@ -1,0 +1,327 @@
+= Step 1 - Create Workspace Template: One-Click Java Environment
+include::_attributes.adoc[]
+
+Register a clickable workspace sample in the Dev Spaces dashboard called *"My Java Workspace"*. When any team member clicks it, Dev Spaces spins up a fully provisioned Java development environment - with JDK, Maven, and all required tools - in under 3 minutes.
+
+By the end of this step your team will have a one-click tile in the Dev Spaces dashboard that anyone can use to start developing Java immediately.
+
+== Prerequisites
+
+* xref:00-setup.adoc[Cluster Setup] completed by the administrator
+* `oc` CLI authenticated to the cluster (developer-level access or higher)
+* Access to a Git hosting service (GitHub, GitLab, Gitea)
+* Groups of 2-4 participants working together
+
+== How It Works
+
+A *devfile* is a YAML file that lives at the root of a Git repository. It tells Dev Spaces what container image to use, what tools to install, and how to configure the environment. When a user creates a workspace from that repository, Dev Spaces reads the devfile and provisions everything automatically.
+
+A *dashboard sample* is a ConfigMap in the `openshift-devspaces` namespace with a specific label. The dashboard reads these ConfigMaps and displays them as clickable tiles on the "Create Workspace" page.
+
+== Steps to Apply
+
+[#understand-devfile]
+=== 1. Understand the devfile
+
+*What:* Review the `devfile.yaml` that defines the Java workspace environment.
+
+*Why:* Understanding the devfile is key to customizing workspaces for your team's needs.
+
+The sample repository at link:{sample-repo-url}[my-sample-java-app] already contains a devfile. Here are the key sections:
+
+[source,yaml]
+----
+schemaVersion: 2.2.0
+metadata:
+  name: my-java-workspace
+  displayName: My Java Workspace
+  description: Pre-configured Java development environment
+  language: java
+  projectType: Maven
+
+components:
+  - name: java-tools
+    container:
+      image: registry.redhat.io/devspaces/udi-rhel9:3.27
+      memoryLimit: 4Gi
+      env:
+        - name: JAVA_HOME
+          value: /usr/lib/jvm/java-17-openjdk
+        - name: MAVEN_OPTS
+          value: "-Xmx1024m"
+      endpoints:
+        - name: app
+          targetPort: 8080
+          exposure: public
+        - name: debug
+          targetPort: 5005
+          exposure: internal
+      volumeMounts:
+        - name: m2-cache
+          path: /home/user/.m2
+
+commands:
+  - id: build
+    exec:
+      commandLine: mvn clean package -DskipTests
+      group:
+        kind: build
+        isDefault: true
+
+events:
+  postStart:
+    - build
+----
+
+[cols="2,4",options="header"]
+|===
+| Section | What it does
+
+| `components[].container.image`
+| The base container image (Red Hat UDI with JDK, Maven, Git)
+
+| `components[].container.env`
+| Environment variables for Java paths and Maven options
+
+| `components[].container.endpoints`
+| Exposes port 8080 (app) and 5005 (debug)
+
+| `commands[].exec.commandLine`
+| Build, test, run, and debug commands using Maven
+
+| `events.postStart`
+| Triggers the build command on every workspace start
+
+| `volumes`
+| Caches Maven dependencies (`.m2`) so restarts are faster
+|===
+
+The repository also contains `.vscode/extensions.json` which auto-installs the *Red Hat Java*, *Java Debug*, *Java Test*, and *Maven for Java* extensions when the workspace starts.
+
+.Verify: Sample repository is accessible
+[%collapsible]
+====
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+git ls-remote {sample-repo-url}.git HEAD
+----
+
+[.console-output]
+[source,bash]
+----
+<commit-hash>    HEAD
+----
+
+The command should return a commit hash without errors.
+====
+
+'''
+
+[#push-devfile]
+=== 2. Push the devfile to a Git repository
+
+*What:* Ensure the devfile lives in a Git repository accessible from the cluster.
+
+*Why:* Dev Spaces reads the devfile from the Git repository when creating a workspace. Without it, Dev Spaces uses a generic default environment.
+
+*Option A - Use the workshop sample repository* (simplest):
+
+The instructor provides the Git URL:
+
+----
+{sample-repo-url}
+----
+
+*Option B - Create your own repository* (for teams who want full control):
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+mkdir my-java-workspace && cd my-java-workspace
+git init
+----
+
+Copy the `devfile.yaml` from the sample repository into this directory, then push:
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+git add devfile.yaml
+git commit -m "Add Java workspace devfile"
+git remote add origin https://<your-git-host>/<org>/my-java-workspace.git
+git push -u origin main
+----
+
+NOTE: The repository must be accessible from the cluster. If it is private, the Dev Spaces dashboard will prompt participants to authenticate with your Git provider (GitHub OAuth, GitLab token) when they click the tile.
+
+.Verify: Repository has a devfile
+[%collapsible]
+====
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+git ls-remote <your-repo-url> HEAD
+----
+
+[.console-output]
+[source,bash]
+----
+<commit-hash>    HEAD
+----
+====
+
+'''
+
+[#register-sample]
+=== 3. Register the sample in the dashboard
+
+*What:* Create a ConfigMap that adds a clickable "My Java Workspace" tile to the Dev Spaces dashboard.
+
+*Why:* Dashboard samples provide one-click onboarding. New team members can start contributing from day one without any setup.
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+oc apply -f 01-workspace-template/my-java-workspace-sample.yaml
+----
+
+.Verify: Sample is registered
+[%collapsible]
+====
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+oc get configmap -n openshift-devspaces -l app.kubernetes.io/component=getting-started-samples
+----
+
+[.console-output]
+[source,bash]
+----
+NAME                       DATA   AGE
+my-java-workspace-sample   1      10s
+----
+====
+
+'''
+
+[#launch-workspace]
+=== 4. Launch the workspace
+
+*What:* Click the sample tile in the dashboard to create a fully provisioned Java workspace.
+
+*Why:* This validates the entire flow - from devfile to running workspace - and gives participants their first hands-on experience with Dev Spaces.
+
+Open the Dev Spaces dashboard:
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+oc get route devspaces -n openshift-devspaces -o jsonpath='https://{.spec.host}{"\n"}'
+----
+
+Then:
+
+. On the *"Create Workspace"* page, find *"My Java Workspace"* as a sample tile
+. Click it. Dev Spaces will clone the repository, start a container with the UDI image (includes JDK 17 and Maven), and run the initial build
+. Wait ~2-3 minutes for the workspace to start
+. Open a terminal in the workspace and verify the tools
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+java -version
+mvn -version
+----
+
+.Verify: Workspace tools are available
+[%collapsible]
+====
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+java -version
+mvn -version
+----
+
+[.console-output]
+[source,bash]
+----
+openjdk version "17.0.x" ...
+Apache Maven 3.9.x ...
+----
+
+Both commands should return version information. The tools are pre-installed in the UDI image.
+====
+
+'''
+
+== Discussion
+
+Take 5 minutes to discuss with your team:
+
+. *One-click onboarding* - New team members can start contributing from day one. No local setup needed.
+. *Version pinning* - The devfile uses the UDI image which bundles JDK 17 and Maven. What happens when the team wants to upgrade to JDK 21?
+. *Customization* - Each team could have their own sample tile. What would you add to yours? (e.g., database tools, Gradle instead of Maven, Quarkus dev mode)
+
+== What This Solves
+
+[cols="2,3",options="header"]
+|===
+| Problem | How This Step Solves It
+
+| Developers need hours to set up a Java environment locally
+| One-click workspace with JDK, Maven, and extensions pre-configured
+
+| "Works on my machine" issues between team members
+| Everyone gets the same UDI image and tools via the devfile
+
+| Onboarding new team members is slow
+| Dashboard tile provides instant access to a ready-to-use environment
+|===
+
+== What This Does NOT Solve (Yet)
+
+[cols="2,3",options="header"]
+|===
+| Remaining Problem | Addressed In
+
+| Team members need to collaborate on the same codebase
+| xref:02-team-collaboration.adoc[Step 2: Team Collaboration]
+
+| No shared project structure or branching workflow
+| xref:02-team-collaboration.adoc[Step 2: Team Collaboration]
+|===
+
+== Official Documentation
+
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.19[OpenShift Dev Spaces Documentation]
+* link:https://devfile.io/docs/2.2.0/devfile-schema[Devfile Schema Documentation]
+
+== Alternatives Considered
+
+[cols="2,4",options="header"]
+|===
+| Approach | Notes
+
+| Dev Spaces dashboard sample (this solution)
+| One-click tile visible to all users. Scales well for workshops and teams.
+
+| Direct URL import
+| Paste the Git URL in the "Import from Git" field. Works but less discoverable.
+
+| Local development with JDK/Maven installed
+| Full control, but inconsistent environments and slow onboarding.
+|===
+
+'''
+
+== Reset
+
+Remove the dashboard sample ConfigMap. This does not affect any running workspaces.
+
+[.console-input]
+[source,bash]
+----
+oc delete configmap my-java-workspace-sample -n openshift-devspaces --ignore-not-found
+----

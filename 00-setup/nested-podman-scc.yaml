@@ -1,3 +1,5 @@
+# nested-podman-scc.yaml
+# Purpose: Privileged SCC enabling nested containers (podman inside workspace)
 apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints
 metadata:
