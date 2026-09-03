@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Java Development on OpenShift Dev Spaces :: Java Development on OpenShift Dev Spaces</title>
+    <link rel="canonical" href="https://juanlu-sanz.github.io/dev-spaces-workshop/dev-spaces-workshop/02-team-collaboration.html">
+    <link rel="prev" href="01-workspace-template.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img src="../_/img/RHDLogo.svg" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://juanlu-sanz.github.io/dev-spaces-workshop">Java Development on OpenShift Dev Spaces</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <a class="navbar-item" href="https://developers.redhat.com/cheatsheets/" target="_blank">Cheat Sheets</a>
+        <a class="navbar-item" href="https://developers.redhat.com/events/" target="_blank">Upcoming Events</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/istio-tutorial/" target="_blank">Istio</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/tekton-tutorial/" target="_blank">Tekton</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="dev-spaces-workshop" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="00-setup.html">Cluster Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="00-setup.html#install-devspaces">Install Dev Spaces</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="00-setup.html#apply-security">Apply Security Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="00-setup.html#confirm-dashboard">Confirm Dashboard Access</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="00-setup.html#configure-extensions">Configure Extension Registry</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-workspace-template.html">Step 1: Create Workspace Template</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-workspace-template.html#understand-devfile">Understand the Devfile</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-workspace-template.html#push-devfile">Push the Devfile</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-workspace-template.html#register-sample">Register the Sample</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-workspace-template.html#launch-workspace">Launch the Workspace</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02-team-collaboration.html">Step 2: Team Collaboration</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#create-repo">Create a Shared Repository</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#open-in-devspaces">Open in Dev Spaces</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#collaborate">Collaborate on Code</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#merge-integrate">Merge and Integrate</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Java Development on OpenShift Dev Spaces</a></li>
+    <li><a href="02-team-collaboration.html">Step 2: Team Collaboration</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/juanlu-sanz/dev-spaces-workshop/edit/main/documentation/modules/ROOT/pages/02-team-collaboration.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Java Development on OpenShift Dev Spaces</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Work in groups of 2-4 people to simulate a real-world collaboration scenario. Your team will create a shared Git repository, open it in Dev Spaces using the template from Step 1, and collaborate on a simple Java project - just like you would in your daily work.</p>
+</div>
+<div class="paragraph">
+<p>This step builds on <a href="01-workspace-template.html" class="xref page">Step 1</a> by having each participant use the Dev Spaces workspace to contribute code to a shared repository, demonstrating how Dev Spaces isolates each developer&#8217;s environment while sharing code through Git.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="01-workspace-template.html" class="xref page">Step 1: Create Workspace Template</a> completed</p>
+</li>
+<li>
+<p>Each participant has developer-level access to the cluster</p>
+</li>
+<li>
+<p>Each participant has access to a Git hosting service (GitHub, GitLab, Gitea)</p>
+</li>
+<li>
+<p>Groups of 2-4 people formed</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_it_works"><a class="anchor" href="#_how_it_works"></a>How It Works</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each team member opens the same Git repository in their own Dev Spaces workspace. The <code>devfile.yaml</code> in the repository ensures everyone gets the same JDK, Maven, and editor configuration. Team members work on separate branches, then merge their contributions back to <code>main</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_steps_to_apply"><a class="anchor" href="#_steps_to_apply"></a>Steps to Apply</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="create-repo"><a class="anchor" href="#create-repo"></a>1. Create a shared repository</h3>
+<div class="paragraph">
+<p><strong>What:</strong> One person per team creates a Git repository with a Maven project and devfile.</p>
+</div>
+<div class="paragraph">
+<p><strong>Why:</strong> The shared repository is where the team collaborates. The devfile ensures consistent environments across all workspaces.</p>
+</div>
+<div class="paragraph">
+<p>One team member creates a new repository on your Git hosting service with the name <code>java-team-&lt;team-name&gt;</code> (e.g., <code>java-team-alpha</code>). Initialize it with a README and add all team members as collaborators with write access.</p>
+</div>
+<div class="paragraph">
+<p>Clone the repository and create the project structure:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone <a href="https://&lt;your-git-host&gt;/&lt;org&gt;/java-team-&lt;team-name&gt;.git" class="bare">https://&lt;your-git-host&gt;/&lt;org&gt;/java-team-&lt;team-name&gt;.git</a>
+cd java-team-&lt;team-name&gt;
+mkdir -p src/main/java/com/workshop/team
+mkdir -p src/main/resources
+mkdir -p src/test/java/com/workshop/team</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create <code>pom.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;com.workshop&lt;/groupId&gt;
+    &lt;artifactId&gt;java-team-project&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
+    &lt;name&gt;Java Team Project&lt;/name&gt;
+
+    &lt;properties&gt;
+        &lt;java.version&gt;17&lt;/java.version&gt;
+        &lt;maven.compiler.source&gt;17&lt;/maven.compiler.source&gt;
+        &lt;maven.compiler.target&gt;17&lt;/maven.compiler.target&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;junit.version&gt;5.10.2&lt;/junit.version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.junit.jupiter&lt;/groupId&gt;
+            &lt;artifactId&gt;junit-jupiter&lt;/artifactId&gt;
+            &lt;version&gt;${junit.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                &lt;version&gt;3.11.0&lt;/version&gt;
+            &lt;/plugin&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+                &lt;version&gt;3.2.5&lt;/version&gt;
+            &lt;/plugin&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt;
+                &lt;version&gt;3.3.0&lt;/version&gt;
+                &lt;configuration&gt;
+                    &lt;archive&gt;
+                        &lt;manifest&gt;
+                            &lt;mainClass&gt;com.workshop.team.App&lt;/mainClass&gt;
+                        &lt;/manifest&gt;
+                    &lt;/archive&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create the main application class <code>src/main/java/com/workshop/team/App.java</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.workshop.team;
+
+public class App {
+    public static void main(String[] args) {
+        System.out.println("Hello from Java Team Project!");
+        System.out.println("Java version: " + System.getProperty("java.version"));
+    }
+
+    public static String greet(String name) {
+        return "Hello, " + name + "!";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create a test <code>src/test/java/com/workshop/team/AppTest.java</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.workshop.team;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class AppTest {
+    @Test
+    void greetReturnsExpectedMessage() {
+        assertEquals("Hello, World!", App.greet("World"));
+    }
+
+    @Test
+    void greetHandlesEmptyName() {
+        assertEquals("Hello, !", App.greet(""));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create <code>devfile.yaml</code> at the root of the repository:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">schemaVersion: 2.2.0
+metadata:
+  name: java-team-&lt;team-name&gt;
+  displayName: "Java Team &lt;team-name&gt; Workspace"
+  language: java
+  projectType: Maven
+attributes:
+  controller.devfile.io/storage-type: per-user
+
+components:
+  - name: java-tools
+    container:
+      image: registry.redhat.io/devspaces/udi-rhel9:3.27
+      memoryLimit: 4Gi
+      cpuLimit: 1000m
+      cpuRequest: 500m
+      mountSources: true
+      env:
+        - name: JAVA_HOME
+          value: /usr/lib/jvm/java-17-openjdk
+        - name: MAVEN_OPTS
+          value: "-Xmx1024m"
+      endpoints:
+        - name: app
+          targetPort: 8080
+          exposure: public
+        - name: debug
+          targetPort: 5005
+          exposure: internal
+      volumeMounts:
+        - name: m2-cache
+          path: /home/user/.m2
+  - name: m2-cache
+    volume:
+      size: 3Gi
+
+commands:
+  - id: build
+    exec:
+      component: java-tools
+      commandLine: mvn clean package -DskipTests
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: build
+        isDefault: true
+  - id: test
+    exec:
+      component: java-tools
+      commandLine: mvn test
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: test
+        isDefault: true
+
+events:
+  postStart:
+    - build</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Commit and push:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git add -A
+git commit -m "Initial Java project structure with devfile"
+git push origin main</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When you open this repo from the Dev Spaces dashboard, the dashboard will prompt you to authenticate with your Git provider if the repository is private. This is normal and enables pushing/pulling code from your workspace.
+</td>
+</tr>
+</table>
+</div>
+<details>
+<summary class="title">Verify: Repository is ready</summary>
+<div class="content">
+<div class="paragraph">
+<p>All team members should be able to see the repository containing:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java-team-&lt;team-name&gt;/
+  devfile.yaml
+  pom.xml
+  src/main/java/com/workshop/team/App.java
+  src/test/java/com/workshop/team/AppTest.java</code></pre>
+</div>
+</div>
+</div>
+</details>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="open-in-devspaces"><a class="anchor" href="#open-in-devspaces"></a>2. Open the repository in Dev Spaces</h3>
+<div class="paragraph">
+<p><strong>What:</strong> Each team member opens the shared repository in their own Dev Spaces workspace.</p>
+</div>
+<div class="paragraph">
+<p><strong>Why:</strong> This demonstrates how Dev Spaces provides isolated workspaces while sharing code - each person gets their own JDK, Maven cache, and editor without interfering with others.</p>
+</div>
+<div class="paragraph">
+<p>Each team member:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Go to the Dev Spaces dashboard</p>
+</li>
+<li>
+<p>In the <strong>"Import from Git"</strong> field, paste the repository URL:</p>
+<div class="listingblock">
+<div class="content">
+<pre>https://&lt;your-git-host&gt;/&lt;org&gt;/java-team-&lt;team-name&gt;.git</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Click <strong>"Create &amp; Open"</strong></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Dev Spaces detects the <code>devfile.yaml</code> and configures the workspace automatically. The first start takes ~2-3 minutes as the <code>postStart</code> event compiles the project and downloads Maven dependencies.</p>
+</div>
+<details>
+<summary class="title">Verify: Everyone is in</summary>
+<div class="content">
+<div class="paragraph">
+<p>Each team member opens a terminal in their workspace and runs:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -version
+mvn -version
+pwd</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">openjdk version "17.0.x" ...
+Apache Maven 3.9.x ...
+/projects/java-team-&lt;team-name&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Everyone should see JDK 17+, Maven 3.9+, and the project directory as the working directory.</p>
+</div>
+</div>
+</details>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="collaborate"><a class="anchor" href="#collaborate"></a>3. Collaborate - each member adds a utility class</h3>
+<div class="paragraph">
+<p><strong>What:</strong> Each team member creates a different utility class on their own feature branch.</p>
+</div>
+<div class="paragraph">
+<p><strong>Why:</strong> This simulates a real team workflow - isolated development on feature branches, followed by integration.</p>
+</div>
+<div class="paragraph">
+<p>Each member creates a feature branch:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git checkout -b feature/&lt;your-name&gt;-util</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each person creates a utility class in <code>src/main/java/com/workshop/team/</code> and a matching test in <code>src/test/java/com/workshop/team/</code>. For example:</p>
+</div>
+<div class="paragraph">
+<p><strong>Person 1</strong> - <code>StringUtils.java</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.workshop.team;
+
+public class StringUtils {
+    public static String reverse(String input) {
+        if (input == null) return null;
+        return new StringBuilder(input).reverse().toString();
+    }
+
+    public static boolean isPalindrome(String input) {
+        if (input == null) return false;
+        String cleaned = input.replaceAll("\\s+", "").toLowerCase();
+        return cleaned.equals(reverse(cleaned));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Person 2</strong> - <code>MathUtils.java</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.workshop.team;
+
+public class MathUtils {
+    public static int factorial(int n) {
+        if (n &lt; 0) throw new IllegalArgumentException("Negative input: " + n);
+        if (n &lt;= 1) return 1;
+        return n * factorial(n - 1);
+    }
+
+    public static boolean isPrime(int n) {
+        if (n &lt;= 1) return false;
+        for (int i = 2; i &lt;= Math.sqrt(n); i++) {
+            if (n % i == 0) return false;
+        }
+        return true;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Person 3</strong> - <code>CollectionUtils.java</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.workshop.team;
+
+import java.util.List;
+import java.util.Collections;
+import java.util.stream.Collectors;
+
+public class CollectionUtils {
+    public static &lt;T extends Comparable&lt;T&gt;&gt; List&lt;T&gt; sorted(List&lt;T&gt; input) {
+        if (input == null) return Collections.emptyList();
+        return input.stream().sorted().collect(Collectors.toList());
+    }
+
+    public static &lt;T&gt; List&lt;T&gt; unique(List&lt;T&gt; input) {
+        if (input == null) return Collections.emptyList();
+        return input.stream().distinct().collect(Collectors.toList());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each person should also create a corresponding test class with JUnit 5 assertions.</p>
+</div>
+<div class="paragraph">
+<p>Build and test your code:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn test</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then commit and push the branch:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git add src/
+git commit -m "Add &lt;ClassName&gt; utility with tests"
+git push origin feature/&lt;your-name&gt;-util</code></pre>
+</div>
+</div>
+<details>
+<summary class="title">Verify: Branches pushed</summary>
+<div class="content">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git branch -r</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">  origin/main
+  origin/feature/alice-util
+  origin/feature/bob-util
+  origin/feature/carol-util</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should see one branch per team member plus <code>origin/main</code>.</p>
+</div>
+</div>
+</details>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="merge-integrate"><a class="anchor" href="#merge-integrate"></a>4. Merge and integrate</h3>
+<div class="paragraph">
+<p><strong>What:</strong> Merge all feature branches to <code>main</code> and verify the combined project builds and passes all tests.</p>
+</div>
+<div class="paragraph">
+<p><strong>Why:</strong> This is the integration step - proving that isolated workspaces produce code that works together.</p>
+</div>
+<div class="paragraph">
+<p>Each member merges their branch:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git checkout main
+git pull origin main
+git merge feature/&lt;your-name&gt;-util
+git push origin main</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If there are merge conflicts, resolve them together - this is part of the learning.</p>
+</div>
+<div class="paragraph">
+<p>Once all branches are merged, everyone pulls the final state:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git checkout main
+git pull origin main</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Build and test the combined project:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn clean test</code></pre>
+</div>
+</div>
+<details>
+<summary class="title">Verify: Team project is complete</summary>
+<div class="content">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">find src -name "*.java" | sort
+mvn test</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">src/main/java/com/workshop/team/App.java
+src/main/java/com/workshop/team/CollectionUtils.java
+src/main/java/com/workshop/team/MathUtils.java
+src/main/java/com/workshop/team/StringUtils.java
+src/test/java/com/workshop/team/AppTest.java
+src/test/java/com/workshop/team/CollectionUtilsTest.java
+src/test/java/com/workshop/team/MathUtilsTest.java
+src/test/java/com/workshop/team/StringUtilsTest.java
+...
+BUILD SUCCESS</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Multiple Java source files and tests (one per team member), and <code>mvn test</code> passes with <code>BUILD SUCCESS</code>.</p>
+</div>
+</div>
+</details>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_discussion"><a class="anchor" href="#_discussion"></a>Discussion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Take 5 minutes as a team to discuss:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Isolation</strong> - Each person had their own workspace, but shared the code via Git. How is this different from sharing a single VM or bastion host?</p>
+</li>
+<li>
+<p><strong>Reproducibility</strong> - Everyone got the same tools because the <code>devfile.yaml</code> defined the environment. What happens if someone on the team needs JDK 21 instead of 17?</p>
+</li>
+<li>
+<p><strong>Speed</strong> - After the first start, subsequent workspace starts are faster due to Maven caching. What would you customize for your real-world team?</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_this_solves_compared_to_step_1"><a class="anchor" href="#_what_this_solves_compared_to_step_1"></a>What This Solves (Compared to Step 1)</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Problem from Step 1</th>
+<th class="tableblock halign-left valign-top">How This Step Solves It</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Individual workspace with no shared project</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Team repository with devfile providing consistent environments</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No collaboration workflow demonstrated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Feature branches, merge, and integration testing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Single-user experience only</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multiple team members working in parallel on the same codebase</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_this_does_not_solve_yet"><a class="anchor" href="#_what_this_does_not_solve_yet"></a>What This Does NOT Solve (Yet)</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Remaining Problem</th>
+<th class="tableblock halign-left valign-top">Possible Next Step</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No CI/CD pipeline</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a GitHub Actions or Tekton pipeline for automated testing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No container build/deploy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a Containerfile and deploy to OpenShift with <code>oc new-app</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No database or external services</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add a database component to the devfile (e.g., PostgreSQL)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_official_documentation"><a class="anchor" href="#_official_documentation"></a>Official Documentation</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.19">OpenShift Dev Spaces Documentation</a></p>
+</li>
+<li>
+<p><a href="https://devfile.io/docs/2.2.0/devfile-schema">Devfile Schema Documentation</a></p>
+</li>
+<li>
+<p><a href="https://catalog.redhat.com/software/containers/devspaces/udi-rhel9/">Red Hat UDI Image</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alternatives_considered"><a class="anchor" href="#_alternatives_considered"></a>Alternatives Considered</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Approach</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dev Spaces workspaces from shared Git repo (this solution)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consistent environments, isolated workspaces, Git-based collaboration. Scales to any team size.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shared development VM or bastion host</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Single environment, conflicts between users, no isolation. Simpler infrastructure but worse developer experience.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Local development with IDE sync</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full local control, but inconsistent tooling and complex onboarding.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reset"><a class="anchor" href="#_reset"></a>Reset</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are no cluster resources to clean up from this step. To fully reset:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Delete the team repository from your Git hosting service (manual step)
+# Stop any running Dev Spaces workspaces from the dashboard</code></pre>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="01-workspace-template.html">Step 1: Create Workspace Template</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

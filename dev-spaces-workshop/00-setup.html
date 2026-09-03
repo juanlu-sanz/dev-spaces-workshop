@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Java Development on OpenShift Dev Spaces :: Java Development on OpenShift Dev Spaces</title>
+    <link rel="canonical" href="https://juanlu-sanz.github.io/dev-spaces-workshop/dev-spaces-workshop/00-setup.html">
+    <link rel="prev" href="index.html">
+    <link rel="next" href="01-workspace-template.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img src="../_/img/RHDLogo.svg" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://juanlu-sanz.github.io/dev-spaces-workshop">Java Development on OpenShift Dev Spaces</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <a class="navbar-item" href="https://developers.redhat.com/cheatsheets/" target="_blank">Cheat Sheets</a>
+        <a class="navbar-item" href="https://developers.redhat.com/events/" target="_blank">Upcoming Events</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/istio-tutorial/" target="_blank">Istio</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/tekton-tutorial/" target="_blank">Tekton</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="dev-spaces-workshop" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="00-setup.html">Cluster Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#install-devspaces">Install Dev Spaces</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#apply-security">Apply Security Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#confirm-dashboard">Confirm Dashboard Access</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#configure-extensions">Configure Extension Registry</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-workspace-template.html">Step 1: Create Workspace Template</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-workspace-template.html#understand-devfile">Understand the Devfile</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-workspace-template.html#push-devfile">Push the Devfile</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-workspace-template.html#register-sample">Register the Sample</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-workspace-template.html#launch-workspace">Launch the Workspace</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02-team-collaboration.html">Step 2: Team Collaboration</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-team-collaboration.html#create-repo">Create a Shared Repository</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-team-collaboration.html#open-in-devspaces">Open in Dev Spaces</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-team-collaboration.html#collaborate">Collaborate on Code</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-team-collaboration.html#merge-integrate">Merge and Integrate</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Java Development on OpenShift Dev Spaces</a></li>
+    <li><a href="00-setup.html">Cluster Setup</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/juanlu-sanz/dev-spaces-workshop/edit/main/documentation/modules/ROOT/pages/00-setup.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Java Development on OpenShift Dev Spaces</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section is performed by the <strong>cluster administrator</strong> before the workshop begins. It installs OpenShift Dev Spaces and applies the base configuration needed for the exercises.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>OpenShift 4.17+ cluster with cluster-admin access</p>
+</li>
+<li>
+<p><code>oc</code> CLI installed and authenticated to the cluster</p>
+</li>
+<li>
+<p>A Git hosting service accessible from the cluster (GitHub, GitLab, Gitea)</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+All commands in this page target a single OpenShift cluster. Ensure your <code>oc</code> session is authenticated as cluster-admin before proceeding.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_steps_to_apply"><a class="anchor" href="#_steps_to_apply"></a>Steps to Apply</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="install-devspaces"><a class="anchor" href="#install-devspaces"></a>1. Install the Dev Spaces operator</h3>
+<div class="paragraph">
+<p><strong>What:</strong> Install the OpenShift Dev Spaces operator and create the CheCluster instance.</p>
+</div>
+<div class="paragraph">
+<p><strong>Why:</strong> The operator manages the full Dev Spaces lifecycle - dashboard, workspace controller, and plugin registry.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc create namespace openshift-devspaces
+oc apply -f 00-setup/subscription.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait for the operator to become ready (~2-3 minutes):</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get csv -n openshift-operators -w | grep devspaces</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once you see <code>Succeeded</code>, apply the CheCluster:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f 00-setup/checluster.yaml</code></pre>
+</div>
+</div>
+<details>
+<summary class="title">Verify: Dev Spaces is running</summary>
+<div class="content">
+<div class="paragraph">
+<p>Wait for the cluster to become active (5-10 minutes):</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "Waiting for CheCluster to become ready..."
+until [ "$(oc get checluster devspaces -n openshift-devspaces -o jsonpath='{.status.chePhase}' 2&gt;/dev/null)" = "Active" ]; do
+  sleep 15
+  echo "  Still waiting... ($(oc get checluster devspaces -n openshift-devspaces -o jsonpath='{.status.chePhase}' 2&gt;/dev/null || echo 'Initializing'))"
+done
+echo "CheCluster is Active!"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Confirm all pods are running:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -n openshift-devspaces</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                      READY   STATUS    RESTARTS   AGE
+che-gateway-xxxxxxxxxx-xxxxx              4/4     Running   0          5m
+devspaces-xxxxxxxxxx-xxxxx                1/1     Running   0          5m
+devspaces-dashboard-xxxxxxxxxx-xxxxx      1/1     Running   0          5m
+plugin-registry-xxxxxxxxxx-xxxxx          1/1     Running   0          5m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All pods should show <code>Running</code> or <code>Completed</code>.</p>
+</div>
+</div>
+</details>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="apply-security"><a class="anchor" href="#apply-security"></a>2. Apply security and resource configuration</h3>
+<div class="paragraph">
+<p><strong>What:</strong> Create a SecurityContextConstraint for container builds and a ResourceQuota for workspace fairness.</p>
+</div>
+<div class="paragraph">
+<p><strong>Why:</strong> The SCC allows workspaces to run container builds, and the quota prevents a single user from consuming all cluster resources.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f 00-setup/container-build-scc.yaml
+oc apply -f 00-setup/workspace-resource-limits.yaml</code></pre>
+</div>
+</div>
+<details>
+<summary class="title">Verify: Configuration applied</summary>
+<div class="content">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get scc container-build
+oc get resourcequota devspaces-workspace-quota -n openshift-devspaces</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME              PRIV    CAPS                          SELINUX     RUNASUSER          FSGROUP     SUPGROUP   ...
+container-build   false   ["SETUID","SETGID",...] ...   MustRunAs   MustRunAsRange     MustRunAs   RunAsAny   ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both commands should return the resource without errors.</p>
+</div>
+</div>
+</details>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="confirm-dashboard"><a class="anchor" href="#confirm-dashboard"></a>3. Confirm dashboard access</h3>
+<div class="paragraph">
+<p><strong>What:</strong> Retrieve the Dev Spaces dashboard URL and verify it responds.</p>
+</div>
+<div class="paragraph">
+<p><strong>Why:</strong> The dashboard is the entry point for all participants - they will use it to create workspaces.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route devspaces -n openshift-devspaces -o jsonpath='https://{.spec.host}{"\n"}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Open the URL in a browser and log in with your OpenShift credentials. You should see the Dev Spaces dashboard with the header banner <strong>"Java Development Workshop Environment"</strong>.</p>
+</div>
+<details>
+<summary class="title">Verify: Dashboard responds</summary>
+<div class="content">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -skI "$(oc get route devspaces -n openshift-devspaces -o jsonpath='https://{.spec.host}')" | head -1</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">HTTP/2 200</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may see <code>HTTP/2 302</code> (redirect to login) instead - both are expected.</p>
+</div>
+</div>
+</details>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="configure-extensions"><a class="anchor" href="#configure-extensions"></a>4. (Optional) Configure the extension registry</h3>
+<div class="paragraph">
+<p><strong>What:</strong> Point Dev Spaces at a public or private Open VSX registry for IDE extensions.</p>
+</div>
+<div class="paragraph">
+<p><strong>Why:</strong> The embedded registry has a limited set of extensions. Java extensions (Red Hat Java, Maven, Debug) may require the full Open VSX registry.</p>
+</div>
+<div class="paragraph">
+<p>For <strong>internet-connected</strong> environments, point Dev Spaces at the public Open VSX registry:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  components:
+    pluginRegistry:
+      openVSXURL: "https://open-vsx.org"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For <strong>air-gapped / disconnected</strong> environments, deploy a standalone Open VSX mirror and configure Dev Spaces to use it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spec:
+  components:
+    pluginRegistry:
+      openVSXURL: "https://your-internal-openvsx.example.com"</code></pre>
+</div>
+</div>
+<details>
+<summary class="title">Verify: Extensions are available</summary>
+<div class="content">
+<div class="paragraph">
+<p>After updating the <code>CheCluster</code> resource, confirm the <code>plugin-registry</code> pod restarts. Then open a workspace and check the <strong>Extensions</strong> view to verify extensions resolve from the configured registry.</p>
+</div>
+</div>
+</details>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_setup_complete"><a class="anchor" href="#_setup_complete"></a>Setup Complete</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The cluster is ready for participants. Share the dashboard URL with the group and proceed to <a href="01-workspace-template.html" class="xref page">Step 1: Create Workspace Template</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_files_reference"><a class="anchor" href="#_files_reference"></a>Files Reference</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">File</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>00-setup/subscription.yaml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Operator subscription for Dev Spaces</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>00-setup/checluster.yaml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CheCluster instance with workshop configuration</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>00-setup/container-build-scc.yaml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SCC for container builds</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>00-setup/workspace-resource-limits.yaml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Resource quota for workspace fairness</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_official_documentation"><a class="anchor" href="#_official_documentation"></a>Official Documentation</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.19">OpenShift Dev Spaces Documentation</a></p>
+</li>
+<li>
+<p><a href="https://docs.redhat.com/en/documentation/openshift_container_platform/4.17">OpenShift Container Platform Documentation</a></p>
+</li>
+<li>
+<p><a href="https://eclipse.dev/che/docs/stable/administration-guide/configuring-the-open-vsx-registry-url/">Configure the Open VSX Registry URL - Eclipse Che Administration Guide</a></p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reset"><a class="anchor" href="#_reset"></a>Reset</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Remove Dev Spaces and all configuration applied in this step. Resources are deleted in reverse order - the CheCluster must be removed before the operator subscription to allow proper cleanup of workspace resources.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc delete resourcequota devspaces-workspace-quota -n openshift-devspaces --ignore-not-found
+oc delete scc container-build --ignore-not-found
+oc delete checluster devspaces -n openshift-devspaces --ignore-not-found
+oc wait --for=delete checluster/devspaces -n openshift-devspaces --timeout=120s 2&gt;/dev/null || true
+oc delete subscription devspaces -n openshift-operators --ignore-not-found
+oc delete csv -n openshift-operators -l operators.coreos.com/devspaces.openshift-operators --ignore-not-found
+oc delete namespace openshift-devspaces --ignore-not-found</code></pre>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="index.html">Overview</a></span>
+  <span class="next"><a href="01-workspace-template.html">Step 1: Create Workspace Template</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

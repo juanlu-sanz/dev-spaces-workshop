@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Java Development on OpenShift Dev Spaces :: Java Development on OpenShift Dev Spaces</title>
+    <link rel="canonical" href="https://juanlu-sanz.github.io/dev-spaces-workshop/dev-spaces-workshop/index.html">
+    <link rel="next" href="00-setup.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img src="../_/img/RHDLogo.svg" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://juanlu-sanz.github.io/dev-spaces-workshop">Java Development on OpenShift Dev Spaces</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <a class="navbar-item" href="https://developers.redhat.com/cheatsheets/" target="_blank">Cheat Sheets</a>
+        <a class="navbar-item" href="https://developers.redhat.com/events/" target="_blank">Upcoming Events</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/istio-tutorial/" target="_blank">Istio</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/tekton-tutorial/" target="_blank">Tekton</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="dev-spaces-workshop" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="00-setup.html">Cluster Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="00-setup.html#install-devspaces">Install Dev Spaces</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="00-setup.html#apply-security">Apply Security Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="00-setup.html#confirm-dashboard">Confirm Dashboard Access</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="00-setup.html#configure-extensions">Configure Extension Registry</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-workspace-template.html">Step 1: Create Workspace Template</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-workspace-template.html#understand-devfile">Understand the Devfile</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-workspace-template.html#push-devfile">Push the Devfile</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-workspace-template.html#register-sample">Register the Sample</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-workspace-template.html#launch-workspace">Launch the Workspace</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02-team-collaboration.html">Step 2: Team Collaboration</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-team-collaboration.html#create-repo">Create a Shared Repository</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-team-collaboration.html#open-in-devspaces">Open in Dev Spaces</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-team-collaboration.html#collaborate">Collaborate on Code</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-team-collaboration.html#merge-integrate">Merge and Integrate</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link is-current"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Java Development on OpenShift Dev Spaces</a></li>
+    <li><a href="index.html">Overview</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/juanlu-sanz/dev-spaces-workshop/edit/main/documentation/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Java Development on OpenShift Dev Spaces</h1>
+<div class="sect1 text-center strong">
+<h2>Cloud-native Java development - from zero to productive in minutes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A hands-on workshop for teams interested in developing Java applications inside OpenShift Dev Spaces. Learn how to set up one-click developer workspaces, collaborate with your team through Git, and build Java projects entirely from the cloud - no local tooling required.</p>
+</div>
+<div class="paragraph">
+<p>Participants work in groups of 2-4 people throughout the exercises.</p>
+</div>
+</div>
+</div>
+<div class="sect1 tiles browse">
+<h2>Browse Modules</h2>
+<div class="sectionbody">
+<div class="ulist tile">
+<div class="title"><a href="00-setup.html" class="xref page">Cluster Setup</a></div>
+<ul>
+<li>
+<p><a href="00-setup.html#install-devspaces" class="xref page">Install Dev Spaces operator</a></p>
+</li>
+<li>
+<p><a href="00-setup.html#apply-security" class="xref page">Apply security and resource configuration</a></p>
+</li>
+<li>
+<p><a href="00-setup.html#confirm-dashboard" class="xref page">Confirm dashboard access</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist tile">
+<div class="title"><a href="01-workspace-template.html" class="xref page">Step 1: Create Workspace Template</a></div>
+<ul>
+<li>
+<p><a href="01-workspace-template.html#understand-devfile" class="xref page">Understand the devfile</a></p>
+</li>
+<li>
+<p><a href="01-workspace-template.html#register-sample" class="xref page">Register a dashboard sample tile</a></p>
+</li>
+<li>
+<p><a href="01-workspace-template.html#launch-workspace" class="xref page">Launch a Java workspace</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist tile">
+<div class="title"><a href="02-team-collaboration.html" class="xref page">Step 2: Team Collaboration</a></div>
+<ul>
+<li>
+<p><a href="02-team-collaboration.html#create-repo" class="xref page">Create a shared Java repository</a></p>
+</li>
+<li>
+<p><a href="02-team-collaboration.html#collaborate" class="xref page">Collaborate using branches</a></p>
+</li>
+<li>
+<p><a href="02-team-collaboration.html#merge-integrate" class="xref page">Merge and test the combined project</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2>Environment</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Item</th>
+<th class="tableblock halign-left valign-top">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift Container Platform</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.17+</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift Dev Spaces</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.19+</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">17+</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maven</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.9+</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UDI Image</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>registry.redhat.io/devspaces/udi-rhel9:3.27</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sample Repository</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/juanlu-sanz/my-sample-java-app">my-sample-java-app</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<nav class="pagination">
+  <span class="next"><a href="00-setup.html">Cluster Setup</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
