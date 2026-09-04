@@ -26,7 +26,7 @@ spec:
     defaultComponents:
       - name: dev-tools
         container:
-          image: registry.redhat.io/devspaces/udi-rhel9:3.27
+          image: registry.redhat.io/devspaces/udi-rhel9:3.30
           memoryLimit: 6Gi
           cpuLimit: 2000m
     defaultEditor: che-incubator/che-code/latest

@@ -42,7 +42,7 @@ metadata:
 components:
   - name: java-tools
     container:
-      image: registry.redhat.io/devspaces/udi-rhel9:3.27
+      image: registry.redhat.io/devspaces/udi-rhel9:3.30
       memoryLimit: 4Gi
       env:
         - name: JAVA_HOME
@@ -295,7 +295,7 @@ Take 5 minutes to discuss with your team:
 
 == Official Documentation
 
-* link:https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.19[OpenShift Dev Spaces Documentation]
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.30[OpenShift Dev Spaces Documentation]
 * link:https://devfile.io/docs/2.2.0/devfile-schema[Devfile Schema Documentation]
 
 == Alternatives Considered

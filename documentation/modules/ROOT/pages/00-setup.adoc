@@ -74,10 +74,11 @@ NAME                                      READY   STATUS    RESTARTS   AGE
 che-gateway-xxxxxxxxxx-xxxxx              4/4     Running   0          5m
 devspaces-xxxxxxxxxx-xxxxx                1/1     Running   0          5m
 devspaces-dashboard-xxxxxxxxxx-xxxxx      1/1     Running   0          5m
-plugin-registry-xxxxxxxxxx-xxxxx          1/1     Running   0          5m
 ----
 
 All pods should show `Running` or `Completed`.
+
+NOTE: When `openVSXURL` is set to an external registry (e.g., `https://open-vsx.org`), the `plugin-registry` pod is not deployed. This is expected.
 ====
 
 '''
@@ -94,6 +95,14 @@ All pods should show `Running` or `Completed`.
 ----
 oc apply -f 00-setup/container-build-scc.yaml
 oc apply -f 00-setup/workspace-resource-limits.yaml
+----
+
+If your workshop requires building container images with Podman inside workspaces (nested containers), also apply the optional privileged SCC:
+
+[.console-input]
+[source,bash,subs="+macros,+attributes"]
+----
+oc apply -f 00-setup/nested-podman-scc.yaml
 ----
 
 .Verify: Configuration applied
@@ -209,11 +218,14 @@ The cluster is ready for participants. Share the dashboard URL with the group an
 
 | `00-setup/workspace-resource-limits.yaml`
 | Resource quota for workspace fairness
+
+| `00-setup/nested-podman-scc.yaml`
+| (Optional) Privileged SCC for running Podman inside workspaces
 |===
 
 == Official Documentation
 
-* link:https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.19[OpenShift Dev Spaces Documentation]
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.30[OpenShift Dev Spaces Documentation]
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.17[OpenShift Container Platform Documentation]
 * link:https://eclipse.dev/che/docs/stable/administration-guide/configuring-the-open-vsx-registry-url/[Configure the Open VSX Registry URL - Eclipse Che Administration Guide]
 
@@ -228,6 +240,7 @@ Remove Dev Spaces and all configuration applied in this step. Resources are dele
 ----
 oc delete resourcequota devspaces-workspace-quota -n openshift-devspaces --ignore-not-found
 oc delete scc container-build --ignore-not-found
+oc delete scc nested-podman-scc --ignore-not-found
 oc delete checluster devspaces -n openshift-devspaces --ignore-not-found
 oc wait --for=delete checluster/devspaces -n openshift-devspaces --timeout=120s 2>/dev/null || true
 oc delete subscription devspaces -n openshift-operators --ignore-not-found

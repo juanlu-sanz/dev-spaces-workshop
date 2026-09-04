@@ -57,8 +57,7 @@ Create `pom.xml`:
 
     <properties>
         <java.version>17</java.version>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.2</junit.version>
     </properties>
@@ -157,7 +156,7 @@ attributes:
 components:
   - name: java-tools
     container:
-      image: registry.redhat.io/devspaces/udi-rhel9:3.27
+      image: registry.redhat.io/devspaces/udi-rhel9:3.30
       memoryLimit: 4Gi
       cpuLimit: 1000m
       cpuRequest: 500m
@@ -364,6 +363,8 @@ public class CollectionUtils {
 
 Each person should also create a corresponding test class with JUnit 5 assertions.
 
+TIP: When testing `CollectionUtils.sorted()` with an empty list, assign the list to a typed variable first (e.g., `List<Integer> empty = Arrays.asList();`) instead of passing `Arrays.asList()` inline. Without the type hint, Java infers `List<Object>` which does not satisfy the `<T extends Comparable<T>>` bound and causes a compilation error.
+
 Build and test your code:
 
 [.console-input]
@@ -514,7 +515,7 @@ Take 5 minutes as a team to discuss:
 
 == Official Documentation
 
-* link:https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.19[OpenShift Dev Spaces Documentation]
+* link:https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.30[OpenShift Dev Spaces Documentation]
 * link:https://devfile.io/docs/2.2.0/devfile-schema[Devfile Schema Documentation]
 * link:https://catalog.redhat.com/software/containers/devspaces/udi-rhel9/[Red Hat UDI Image]
 
