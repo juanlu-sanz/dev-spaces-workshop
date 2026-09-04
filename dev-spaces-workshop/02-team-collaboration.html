@@ -214,8 +214,7 @@ mkdir -p src/test/java/com/workshop/team</code></pre>
 
     &lt;properties&gt;
         &lt;java.version&gt;17&lt;/java.version&gt;
-        &lt;maven.compiler.source&gt;17&lt;/maven.compiler.source&gt;
-        &lt;maven.compiler.target&gt;17&lt;/maven.compiler.target&gt;
+        &lt;maven.compiler.release&gt;17&lt;/maven.compiler.release&gt;
         &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
         &lt;junit.version&gt;5.10.2&lt;/junit.version&gt;
     &lt;/properties&gt;
@@ -317,7 +316,7 @@ attributes:
 components:
   - name: java-tools
     container:
-      image: registry.redhat.io/devspaces/udi-rhel9:3.27
+      image: registry.redhat.io/devspaces/udi-rhel9:3.30
       memoryLimit: 4Gi
       cpuLimit: 1000m
       cpuRequest: 500m
@@ -555,6 +554,18 @@ public class CollectionUtils {
 <div class="paragraph">
 <p>Each person should also create a corresponding test class with JUnit 5 assertions.</p>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+When testing <code>CollectionUtils.sorted()</code> with an empty list, assign the list to a typed variable first (e.g., <code>List&lt;Integer&gt; empty = Arrays.asList();</code>) instead of passing <code>Arrays.asList()</code> inline. Without the type hint, Java infers <code>List&lt;Object&gt;</code> which does not satisfy the <code>&lt;T extends Comparable&lt;T&gt;&gt;</code> bound and causes a compilation error.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Build and test your code:</p>
 </div>
@@ -756,7 +767,7 @@ BUILD SUCCESS</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.19">OpenShift Dev Spaces Documentation</a></p>
+<p><a href="https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.30">OpenShift Dev Spaces Documentation</a></p>
 </li>
 <li>
 <p><a href="https://devfile.io/docs/2.2.0/devfile-schema">Devfile Schema Documentation</a></p>
