@@ -51,12 +51,7 @@ Wait for the cluster to become active (5-10 minutes):
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-echo "Waiting for CheCluster to become ready..."
-until [ "$(oc get checluster devspaces -n openshift-devspaces -o jsonpath='{.status.chePhase}' 2>/dev/null)" = "Active" ]; do
-  sleep 15
-  echo "  Still waiting... ($(oc get checluster devspaces -n openshift-devspaces -o jsonpath='{.status.chePhase}' 2>/dev/null || echo 'Initializing'))"
-done
-echo "CheCluster is Active!"
+bash 00-setup/wait-checluster.sh
 ----
 
 Confirm all pods are running:
@@ -212,6 +207,9 @@ The cluster is ready for participants. Share the dashboard URL with the group an
 
 | `00-setup/checluster.yaml`
 | CheCluster instance with workshop configuration
+
+| `00-setup/wait-checluster.sh`
+| Script to wait until the CheCluster is Active
 
 | `00-setup/container-build-scc.yaml`
 | SCC for container builds
