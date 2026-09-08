@@ -209,12 +209,7 @@ oc apply -f 00-setup/subscription.yaml</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "Waiting for CheCluster to become ready..."
-until [ "$(oc get checluster devspaces -n openshift-devspaces -o jsonpath='{.status.chePhase}' 2&gt;/dev/null)" = "Active" ]; do
-  sleep 15
-  echo "  Still waiting... ($(oc get checluster devspaces -n openshift-devspaces -o jsonpath='{.status.chePhase}' 2&gt;/dev/null || echo 'Initializing'))"
-done
-echo "CheCluster is Active!"</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">bash 00-setup/wait-checluster.sh</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -404,6 +399,10 @@ container-build   false   ["SETUID","SETGID",...] ...   MustRunAs   MustRunAsRan
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>00-setup/checluster.yaml</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CheCluster instance with workshop configuration</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>00-setup/wait-checluster.sh</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Script to wait until the CheCluster is Active</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>00-setup/container-build-scc.yaml</code></p></td>
