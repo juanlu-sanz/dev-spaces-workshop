@@ -1,7 +1,7 @@
 = Step 2 - Team Collaboration: Shared Java Project
 include::_attributes.adoc[]
 
-Work in groups of 2-4 people to simulate a real-world collaboration scenario. Your team will create a shared Git repository, open it in Dev Spaces using the template from Step 1, and collaborate on a simple Java project - just like you would in your daily work.
+Work in groups of 2-4 people to simulate a real-world collaboration scenario. Your team will fork the sample repository from Step 1, open it in Dev Spaces, and collaborate on a simple Java project - just like you would in your daily work.
 
 This step builds on xref:01-workspace-template.adoc[Step 1] by having each participant use the Dev Spaces workspace to contribute code to a shared repository, demonstrating how Dev Spaces isolates each developer's environment while sharing code through Git.
 
@@ -19,198 +19,28 @@ Each team member opens the same Git repository in their own Dev Spaces workspace
 == Steps to Apply
 
 [#create-repo]
-=== 1. Create a shared repository
+=== 1. Fork the sample repository
 
-*What:* One person per team creates a Git repository with a Maven project and devfile.
+*What:* One person per team forks the sample repository from Step 1 into a team-owned copy.
 
-*Why:* The shared repository is where the team collaborates. The devfile ensures consistent environments across all workspaces.
+*Why:* The sample repo already has a working Maven project, devfile, and editor configuration. Forking it gives your team a ready-to-use starting point without copying files manually.
 
-One team member creates a new repository on your Git hosting service with the name `java-team-<team-name>` (e.g., `java-team-alpha`). Initialize it with a README and add all team members as collaborators with write access.
+One team member forks link:{sample-repo-url}[my-sample-java-app] on GitHub:
 
-Clone the repository and create the project structure:
+. Go to link:{sample-repo-url}[{sample-repo-url}]
+. Click *Fork*
+. Name it `java-team-<team-name>` (e.g., `java-team-alpha`)
+. Add all team members as collaborators with write access (*Settings > Collaborators*)
+
+TIP: If your Git hosting service does not support forking, clone and push to a new repository instead:
 
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
 ----
-git clone https://<your-git-host>/<org>/java-team-<team-name>.git
+git clone {sample-repo-url}.git java-team-<team-name>
 cd java-team-<team-name>
-mkdir -p src/main/java/com/workshop/team
-mkdir -p src/main/resources
-mkdir -p src/test/java/com/workshop/team
-----
-
-Create `pom.xml`:
-
-[source,xml]
-----
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.workshop</groupId>
-    <artifactId>java-team-project</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <name>Java Team Project</name>
-
-    <properties>
-        <java.version>17</java.version>
-        <maven.compiler.release>17</maven.compiler.release>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.10.2</junit.version>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.workshop.team.App</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-</project>
-----
-
-Create the main application class `src/main/java/com/workshop/team/App.java`:
-
-[source,java]
-----
-package com.workshop.team;
-
-public class App {
-    public static void main(String[] args) {
-        System.out.println("Hello from Java Team Project!");
-        System.out.println("Java version: " + System.getProperty("java.version"));
-    }
-
-    public static String greet(String name) {
-        return "Hello, " + name + "!";
-    }
-}
-----
-
-Create a test `src/test/java/com/workshop/team/AppTest.java`:
-
-[source,java]
-----
-package com.workshop.team;
-
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
-class AppTest {
-    @Test
-    void greetReturnsExpectedMessage() {
-        assertEquals("Hello, World!", App.greet("World"));
-    }
-
-    @Test
-    void greetHandlesEmptyName() {
-        assertEquals("Hello, !", App.greet(""));
-    }
-}
-----
-
-Create `devfile.yaml` at the root of the repository:
-
-[source,yaml]
-----
-schemaVersion: 2.2.0
-metadata:
-  name: java-team-<team-name>
-  displayName: "Java Team <team-name> Workspace"
-  language: java
-  projectType: Maven
-attributes:
-  controller.devfile.io/storage-type: per-user
-
-components:
-  - name: java-tools
-    container:
-      image: registry.redhat.io/devspaces/udi-rhel9:3.30
-      memoryLimit: 4Gi
-      cpuLimit: 1000m
-      cpuRequest: 500m
-      mountSources: true
-      env:
-        - name: JAVA_HOME
-          value: /usr/lib/jvm/java-17-openjdk
-        - name: MAVEN_OPTS
-          value: "-Xmx1024m"
-      endpoints:
-        - name: app
-          targetPort: 8080
-          exposure: public
-        - name: debug
-          targetPort: 5005
-          exposure: internal
-      volumeMounts:
-        - name: m2-cache
-          path: /home/user/.m2
-  - name: m2-cache
-    volume:
-      size: 3Gi
-
-commands:
-  - id: build
-    exec:
-      component: java-tools
-      commandLine: mvn clean package -DskipTests
-      workingDir: ${PROJECT_SOURCE}
-      group:
-        kind: build
-        isDefault: true
-  - id: test
-    exec:
-      component: java-tools
-      commandLine: mvn test
-      workingDir: ${PROJECT_SOURCE}
-      group:
-        kind: test
-        isDefault: true
-
-events:
-  postStart:
-    - build
-----
-
-Commit and push:
-
-[.console-input]
-[source,bash,subs="+macros,+attributes"]
-----
-git add -A
-git commit -m "Initial Java project structure with devfile"
-git push origin main
+git remote set-url origin https://<your-git-host>/<org>/java-team-<team-name>.git
+git push -u origin main
 ----
 
 NOTE: When you open this repo from the Dev Spaces dashboard, the dashboard will prompt you to authenticate with your Git provider if the repository is private. This is normal and enables pushing/pulling code from your workspace.
@@ -226,8 +56,8 @@ All team members should be able to see the repository containing:
 java-team-<team-name>/
   devfile.yaml
   pom.xml
-  src/main/java/com/workshop/team/App.java
-  src/test/java/com/workshop/team/AppTest.java
+  src/main/java/com/example/demo/App.java
+  src/test/java/com/example/demo/AppTest.java
 ----
 ====
 
@@ -243,7 +73,7 @@ java-team-<team-name>/
 Each team member:
 
 . Go to the Dev Spaces dashboard
-. In the *"Import from Git"* field, paste the repository URL:
+. In the *"Import from Git"* field, paste your team's forked repository URL:
 +
 ----
 https://<your-git-host>/<org>/java-team-<team-name>.git
@@ -293,13 +123,13 @@ Each member creates a feature branch:
 git checkout -b feature/<your-name>-util
 ----
 
-Each person creates a utility class in `src/main/java/com/workshop/team/` and a matching test in `src/test/java/com/workshop/team/`. For example:
+Each person creates a utility class in `src/main/java/com/example/demo/` and a matching test in `src/test/java/com/example/demo/`. For example:
 
 *Person 1* - `StringUtils.java`:
 
 [source,java]
 ----
-package com.workshop.team;
+package com.example.demo;
 
 public class StringUtils {
     public static String reverse(String input) {
@@ -319,7 +149,7 @@ public class StringUtils {
 
 [source,java]
 ----
-package com.workshop.team;
+package com.example.demo;
 
 public class MathUtils {
     public static int factorial(int n) {
@@ -342,7 +172,7 @@ public class MathUtils {
 
 [source,java]
 ----
-package com.workshop.team;
+package com.example.demo;
 
 import java.util.List;
 import java.util.Collections;
@@ -456,14 +286,14 @@ mvn test
 [.console-output]
 [source,bash]
 ----
-src/main/java/com/workshop/team/App.java
-src/main/java/com/workshop/team/CollectionUtils.java
-src/main/java/com/workshop/team/MathUtils.java
-src/main/java/com/workshop/team/StringUtils.java
-src/test/java/com/workshop/team/AppTest.java
-src/test/java/com/workshop/team/CollectionUtilsTest.java
-src/test/java/com/workshop/team/MathUtilsTest.java
-src/test/java/com/workshop/team/StringUtilsTest.java
+src/main/java/com/example/demo/App.java
+src/main/java/com/example/demo/CollectionUtils.java
+src/main/java/com/example/demo/MathUtils.java
+src/main/java/com/example/demo/StringUtils.java
+src/test/java/com/example/demo/AppTest.java
+src/test/java/com/example/demo/CollectionUtilsTest.java
+src/test/java/com/example/demo/MathUtilsTest.java
+src/test/java/com/example/demo/StringUtilsTest.java
 ...
 BUILD SUCCESS
 ----
