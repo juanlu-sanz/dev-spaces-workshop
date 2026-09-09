@@ -133,7 +133,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Work in groups of 2-4 people to simulate a real-world collaboration scenario. Your team will create a shared Git repository, open it in Dev Spaces using the template from Step 1, and collaborate on a simple Java project - just like you would in your daily work.</p>
+<p>Work in groups of 2-4 people to simulate a real-world collaboration scenario. Your team will fork the sample repository from Step 1, open it in Dev Spaces, and collaborate on a simple Java project - just like you would in your daily work.</p>
 </div>
 <div class="paragraph">
 <p>This step builds on <a href="01-workspace-template.html" class="xref page">Step 1</a> by having each participant use the Dev Spaces workspace to contribute code to a shared repository, demonstrating how Dev Spaces isolates each developer&#8217;s environment while sharing code through Git.</p>
@@ -173,204 +173,50 @@
 <h2 id="_steps_to_apply"><a class="anchor" href="#_steps_to_apply"></a>Steps to Apply</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="create-repo"><a class="anchor" href="#create-repo"></a>1. Create a shared repository</h3>
+<h3 id="create-repo"><a class="anchor" href="#create-repo"></a>1. Fork the sample repository</h3>
 <div class="paragraph">
-<p><strong>What:</strong> One person per team creates a Git repository with a Maven project and devfile.</p>
+<p><strong>What:</strong> One person per team forks the sample repository from Step 1 into a team-owned copy.</p>
 </div>
 <div class="paragraph">
-<p><strong>Why:</strong> The shared repository is where the team collaborates. The devfile ensures consistent environments across all workspaces.</p>
+<p><strong>Why:</strong> The sample repo already has a working Maven project, devfile, and editor configuration. Forking it gives your team a ready-to-use starting point without copying files manually.</p>
 </div>
 <div class="paragraph">
-<p>One team member creates a new repository on your Git hosting service with the name <code>java-team-&lt;team-name&gt;</code> (e.g., <code>java-team-alpha</code>). Initialize it with a README and add all team members as collaborators with write access.</p>
+<p>One team member forks <a href="https://github.com/juanlu-sanz/my-sample-java-app">my-sample-java-app</a> on GitHub:</p>
 </div>
-<div class="paragraph">
-<p>Clone the repository and create the project structure:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Go to <a href="https://github.com/juanlu-sanz/my-sample-java-app">https://github.com/juanlu-sanz/my-sample-java-app</a></p>
+</li>
+<li>
+<p>Click <strong>Fork</strong></p>
+</li>
+<li>
+<p>Name it <code>java-team-&lt;team-name&gt;</code> (e.g., <code>java-team-alpha</code>)</p>
+</li>
+<li>
+<p>Add all team members as collaborators with write access (<strong>Settings &gt; Collaborators</strong>)</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If your Git hosting service does not support forking, clone and push to a new repository instead:
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone <a href="https://&lt;your-git-host&gt;/&lt;org&gt;/java-team-&lt;team-name&gt;.git" class="bare">https://&lt;your-git-host&gt;/&lt;org&gt;/java-team-&lt;team-name&gt;.git</a>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone https://github.com/juanlu-sanz/my-sample-java-app.git java-team-&lt;team-name&gt;
 cd java-team-&lt;team-name&gt;
-mkdir -p src/main/java/com/workshop/team
-mkdir -p src/main/resources
-mkdir -p src/test/java/com/workshop/team</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Create <code>pom.xml</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             https://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-    &lt;groupId&gt;com.workshop&lt;/groupId&gt;
-    &lt;artifactId&gt;java-team-project&lt;/artifactId&gt;
-    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
-    &lt;packaging&gt;jar&lt;/packaging&gt;
-    &lt;name&gt;Java Team Project&lt;/name&gt;
-
-    &lt;properties&gt;
-        &lt;java.version&gt;17&lt;/java.version&gt;
-        &lt;maven.compiler.release&gt;17&lt;/maven.compiler.release&gt;
-        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
-        &lt;junit.version&gt;5.10.2&lt;/junit.version&gt;
-    &lt;/properties&gt;
-
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.junit.jupiter&lt;/groupId&gt;
-            &lt;artifactId&gt;junit-jupiter&lt;/artifactId&gt;
-            &lt;version&gt;${junit.version}&lt;/version&gt;
-            &lt;scope&gt;test&lt;/scope&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-
-    &lt;build&gt;
-        &lt;plugins&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
-                &lt;version&gt;3.11.0&lt;/version&gt;
-            &lt;/plugin&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-                &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
-                &lt;version&gt;3.2.5&lt;/version&gt;
-            &lt;/plugin&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-                &lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt;
-                &lt;version&gt;3.3.0&lt;/version&gt;
-                &lt;configuration&gt;
-                    &lt;archive&gt;
-                        &lt;manifest&gt;
-                            &lt;mainClass&gt;com.workshop.team.App&lt;/mainClass&gt;
-                        &lt;/manifest&gt;
-                    &lt;/archive&gt;
-                &lt;/configuration&gt;
-            &lt;/plugin&gt;
-        &lt;/plugins&gt;
-    &lt;/build&gt;
-&lt;/project&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Create the main application class <code>src/main/java/com/workshop/team/App.java</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.workshop.team;
-
-public class App {
-    public static void main(String[] args) {
-        System.out.println("Hello from Java Team Project!");
-        System.out.println("Java version: " + System.getProperty("java.version"));
-    }
-
-    public static String greet(String name) {
-        return "Hello, " + name + "!";
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Create a test <code>src/test/java/com/workshop/team/AppTest.java</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.workshop.team;
-
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
-class AppTest {
-    @Test
-    void greetReturnsExpectedMessage() {
-        assertEquals("Hello, World!", App.greet("World"));
-    }
-
-    @Test
-    void greetHandlesEmptyName() {
-        assertEquals("Hello, !", App.greet(""));
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Create <code>devfile.yaml</code> at the root of the repository:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">schemaVersion: 2.2.0
-metadata:
-  name: java-team-&lt;team-name&gt;
-  displayName: "Java Team &lt;team-name&gt; Workspace"
-  language: java
-  projectType: Maven
-attributes:
-  controller.devfile.io/storage-type: per-user
-
-components:
-  - name: java-tools
-    container:
-      image: registry.redhat.io/devspaces/udi-rhel9:3.30
-      memoryLimit: 4Gi
-      cpuLimit: 1000m
-      cpuRequest: 500m
-      mountSources: true
-      env:
-        - name: JAVA_HOME
-          value: /usr/lib/jvm/java-17-openjdk
-        - name: MAVEN_OPTS
-          value: "-Xmx1024m"
-      endpoints:
-        - name: app
-          targetPort: 8080
-          exposure: public
-        - name: debug
-          targetPort: 5005
-          exposure: internal
-      volumeMounts:
-        - name: m2-cache
-          path: /home/user/.m2
-  - name: m2-cache
-    volume:
-      size: 3Gi
-
-commands:
-  - id: build
-    exec:
-      component: java-tools
-      commandLine: mvn clean package -DskipTests
-      workingDir: ${PROJECT_SOURCE}
-      group:
-        kind: build
-        isDefault: true
-  - id: test
-    exec:
-      component: java-tools
-      commandLine: mvn test
-      workingDir: ${PROJECT_SOURCE}
-      group:
-        kind: test
-        isDefault: true
-
-events:
-  postStart:
-    - build</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Commit and push:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git add -A
-git commit -m "Initial Java project structure with devfile"
-git push origin main</code></pre>
+git remote set-url origin <a href="https://&lt;your-git-host&gt;/&lt;org&gt;/java-team-&lt;team-name&gt;.git" class="bare">https://&lt;your-git-host&gt;/&lt;org&gt;/java-team-&lt;team-name&gt;.git</a>
+git push -u origin main</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -396,8 +242,8 @@ When you open this repo from the Dev Spaces dashboard, the dashboard will prompt
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java-team-&lt;team-name&gt;/
   devfile.yaml
   pom.xml
-  src/main/java/com/workshop/team/App.java
-  src/test/java/com/workshop/team/AppTest.java</code></pre>
+  src/main/java/com/example/demo/App.java
+  src/test/java/com/example/demo/AppTest.java</code></pre>
 </div>
 </div>
 </div>
@@ -421,7 +267,7 @@ When you open this repo from the Dev Spaces dashboard, the dashboard will prompt
 <p>Go to the Dev Spaces dashboard</p>
 </li>
 <li>
-<p>In the <strong>"Import from Git"</strong> field, paste the repository URL:</p>
+<p>In the <strong>"Import from Git"</strong> field, paste your team&#8217;s forked repository URL:</p>
 <div class="listingblock">
 <div class="content">
 <pre>https://&lt;your-git-host&gt;/&lt;org&gt;/java-team-&lt;team-name&gt;.git</pre>
@@ -480,14 +326,14 @@ Apache Maven 3.9.x ...
 </div>
 </div>
 <div class="paragraph">
-<p>Each person creates a utility class in <code>src/main/java/com/workshop/team/</code> and a matching test in <code>src/test/java/com/workshop/team/</code>. For example:</p>
+<p>Each person creates a utility class in <code>src/main/java/com/example/demo/</code> and a matching test in <code>src/test/java/com/example/demo/</code>. For example:</p>
 </div>
 <div class="paragraph">
 <p><strong>Person 1</strong> - <code>StringUtils.java</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.workshop.team;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.example.demo;
 
 public class StringUtils {
     public static String reverse(String input) {
@@ -508,7 +354,7 @@ public class StringUtils {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.workshop.team;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.example.demo;
 
 public class MathUtils {
     public static int factorial(int n) {
@@ -532,7 +378,7 @@ public class MathUtils {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.workshop.team;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.example.demo;
 
 import java.util.List;
 import java.util.Collections;
@@ -657,14 +503,14 @@ mvn test</code></pre>
 </div>
 <div class="listingblock console-output">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">src/main/java/com/workshop/team/App.java
-src/main/java/com/workshop/team/CollectionUtils.java
-src/main/java/com/workshop/team/MathUtils.java
-src/main/java/com/workshop/team/StringUtils.java
-src/test/java/com/workshop/team/AppTest.java
-src/test/java/com/workshop/team/CollectionUtilsTest.java
-src/test/java/com/workshop/team/MathUtilsTest.java
-src/test/java/com/workshop/team/StringUtilsTest.java
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">src/main/java/com/example/demo/App.java
+src/main/java/com/example/demo/CollectionUtils.java
+src/main/java/com/example/demo/MathUtils.java
+src/main/java/com/example/demo/StringUtils.java
+src/test/java/com/example/demo/AppTest.java
+src/test/java/com/example/demo/CollectionUtilsTest.java
+src/test/java/com/example/demo/MathUtilsTest.java
+src/test/java/com/example/demo/StringUtilsTest.java
 ...
 BUILD SUCCESS</code></pre>
 </div>
